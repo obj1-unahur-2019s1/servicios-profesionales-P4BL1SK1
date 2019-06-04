@@ -1,0 +1,29 @@
+import Empresas.*
+import Profesionales.*
+
+test "testX" {
+	//Universidades
+	var sanMartin=new Universidad(provincia="buenos aires",honorariosRecomendados=3500)	
+	var rosario=new Universidad(provincia="santa fe",honorariosRecomendados=2800)
+	var corrientes=new Universidad(provincia="corrientes",honorariosRecomendados=4200)
+	var hurlingham=new Universidad(provincia="buenos aires",honorariosRecomendados=8800)
+	
+	//Profesionales
+	var juana=new ProfesionalVinculado(universidad=rosario)
+	var melina=new ProfesionalAsociado(universidad=corrientes)
+	var rocio=new ProfesionalLibre(universidad=hurlingham,honorariosPorHora=5000,provincias=#{"santa fe","cordoba","buenos aires"})
+	var luciana=new ProfesionalLibre(universidad=rosario,honorariosPorHora=3200,provincias=#{"santa fe","entre rios"})
+
+	//Empresa
+	var empresarda=new Empresa(profesionales=#{juana,melina,rocio,luciana},honorarioDeReferencia=3500)
+
+	//Test
+	
+	assert.equals(#{rocio},empresarda.profesionalesCaros())
+	assert.equals(0,empresarda.profesionalesEgresadosDe(sanMartin))
+	assert.equals(#{rosario,corrientes,hurlingham},empresarda.universidadesFormadoras())
+	assert.equals(juana,empresarda.profesionalMasBarato())
+	assert.equals(true,empresarda.tieneGenteAcotada())
+	luciana.provincias().addAll("corrientes","misiones")
+	assert.equals(false,empresarda.tieneGenteAcotada())
+}
