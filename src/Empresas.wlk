@@ -2,6 +2,7 @@ import Profesionales.*
 class Empresa {
 	var property profesionales
 	var property honorarioDeReferencia
+	var property clientes
 	
 	method profesionalesEgresadosDe(universidad){
 		return profesionales.count{profesional=>profesional.universidad()==universidad}
@@ -20,5 +21,20 @@ class Empresa {
 	}
 	method puedeSatisfacer(solicitante){
 		return profesionales.any{profesional=>solicitante.puedeSatisfacer(profesional)}
+	}
+
+	method darServicio(solicitante) {
+		if( not self.puedeSatisfacer(solicitante)){
+			self.error(self+"no puede satisfacer a el solicitante"+solicitante)
+		}
+		const profElegido=profesionales.find{prof=>prof.puedeSatisfacer(solicitante)}
+		profElegido.cobrar(profElegido.honorariosPorHora())
+		clientes.add(solicitante)
+	}
+	method esPocoAtractivo(empleado){
+		return profesionales.any{
+			profesional=>profesional.provincias()==empleado.provincias()&& 
+			profesional.honorariosPorHora()< empleado.honorariosPorHora()
+		}
 	}
 }
